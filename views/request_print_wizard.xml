@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+	<record id="print_request_wizard_report_view" model="ir.ui.view">
+        <field name="name">Print Request</field>
+        <field name="model">funding_request_management.print.request.wizard</field>
+        <field name="arch" type="xml">
+        	<form>
+				<group>
+					<field name="to" string="To"/>
+					<field name="sub" string="Sub"/>
+					<field name="body" string="Body"/>
+                    <field name="footer" string="Footer"/>
+				</group>
+        		<footer>
+	                <button name="print_request" string="Print" type="object" default_focus="1" class="oe_highlight" />
+					-
+	                <button string="Cancel" class="oe_link" special="cancel" />
+	            </footer>
+			</form>
+        </field>
+    </record>
+
+    <act_window id="print_request_action"
+           name="Request"
+           src_model="funding_request_management.request"
+           res_model="funding_request_management.print.request.wizard"
+           key2="client_print_multi"
+           target="new"
+           view_mode="form" multi="True"/>
+
+	<report
+	   id="action_print_request_report"
+	   name="funding_request_management.print_request_report"
+	   file="funding_request_management.print_request_report"
+	   model="report.funding_request_management.print_request_report"
+	   string="Request Report"
+	   report_type="qweb-html"
+	   attachment="'Request-' + object.name + '.pdf'"
+	   />
+
+	<template id="print_request_report">
+	           <t t-call="web.html_container">
+	               <t t-foreach="docs" t-as="doc">
+	                   <t t-call="web.external_layout">
+						   <t t-if="doc.request_type == 'normal_request'">
+							   <div class="page">
+		                           <div class="row">
+		                               <h3 class="text-center" style="color:black">Office of the Director Admin/finance <br></br>Xafiiska Agaasimaha Maamulka iyo lacagta</h3>
+									<div class="col-xs-12">
+										<div class="col-xs-6"><h4 style="color:black"><strong>Ref : - </strong><t t-esc="doc.name"/></h4></div>
+   										<div class="col-xs-6 text-right"><h4 style="color:black"><strong>Date : - </strong><t t-esc="doc.date_submitted"/></h4></div>
+										<hr style="border-top:1px solid #020202"></hr>
+									</div>
+
+		                           	<div class="col-xs-12">
+										<br></br><br></br><br></br><br></br>
+										<div class="col-xs-12">
+											<h4 style="color:black"><strong>To : - </strong><t t-esc="data['to']"/></h4><br></br>
+											<h4 style="color:black"><strong>Sub : - <t t-esc="data['sub']"/></strong></h4>
+											<br></br><br></br>
+
+											<h4 style="color:black"><span t-raw="data['body']"/></h4>
+
+
+
+
+											<br></br><br></br><br></br><br></br><br></br>
+											<h4 style="color:black"><t t-esc="data['footer']"/></h4>
+											<br></br><br></br>
+			                               </div>
+										   <div class="col-xs-12">
+											   <div class="col-xs-3" style="font-size: 13px">
+
+
+													<t t-if="doc.state == 'approved'">
+														<t t-if="doc.approve_by.signature_image">
+															<span t-field="doc.approve_by.signature_image" t-field-options='{"widget": "image"}'/><br></br>
+														</t>
+														<t t-else="">
+															<span t-field="doc.approve_by.digital_signature" t-field-options='{"widget": "image"}'/>
+														</t>
+
+													</t>
+				                               </div>
+										   </div>
+
+
+										   <div class="col-xs-5">
+											   <h4 style="color:black"><strong><t t-esc="doc.approve_by.name"/></strong></h4>
+											   <h4 style="color:black"><strong><t t-esc="doc.approve_by.title"/></strong></h4>
+
+										   </div>
+										</div>
+
+
+
+		                           </div>
+		                       </div>
+							</t>
+
+
+	                   </t>
+	               </t>
+
+	           </t>
+	       </template>
+</odoo>

@@ -1,0 +1,76 @@
+<odoo>
+<data>
+  <menuitem name="Fund Requests" id="funding_request_management_menu_root"
+         sequence="1"
+         web_icon="funding_request_management,static/description/menu_icon.png"
+         groups="funding_request_management.group_user"/>
+
+  <menuitem name="Request"
+      id="request_menu"
+      parent="funding_request_management_menu_root"
+      groups="funding_request_management.group_user"
+
+      />
+  <menuitem name="All Requests"
+      id="request_list_menu"
+      action="request_list_action"
+      parent="request_menu"
+      groups="funding_request_management.group_user"
+
+      />
+  <menuitem name="To Approve(Director)"
+      id="to_approve_request_menu"
+      action="to_approve_request_list_action"
+      parent="request_menu"
+      groups="funding_request_management.group_can_approve,funding_request_management.group_user,funding_request_management.group_manager"
+      />
+  <menuitem name="Payment Vouchers"
+      id="payment_voucher_menu"
+      parent="funding_request_management_menu_root"
+
+
+      />
+  <menuitem name="All PVs"
+      id="all_payment_voucher_menu"
+      action="payment_list_action"
+      parent="payment_voucher_menu"
+
+
+      />
+  <menuitem name="To Approve (Director)"
+      id="to_approve_director_payment_voucher_menu"
+      action="director_to_approve_payment_list_action"
+      parent="payment_voucher_menu"
+      groups="funding_request_management.group_can_approve"
+
+
+      />
+  <menuitem name="To Approve (Manager)"
+      id="to_approve_manager_payment_voucher_menu"
+      action="manager_to_approve_payment_list_action"
+      parent="payment_voucher_menu"
+      groups="funding_request_management.group_manager"
+
+
+      />
+  <menuitem
+      name = "Bills"
+      action="account.action_invoice_tree2"
+      id="menu_action_invoice_tree2"
+      parent="funding_request_management_menu_root"
+      groups="funding_request_management.group_manager" />
+  <menuitem
+      name = "Funds"
+      action="account.action_invoice_tree1"
+      id="menu_action_invoice_tree1"
+      parent="funding_request_management_menu_root"
+      groups="funding_request_management.group_manager" />
+  <menuitem
+      name = "Partners"
+      action="base.action_partner_customer_form"
+      id="menu_action_partners"
+      parent="funding_request_management_menu_root"
+      groups="funding_request_management.group_manager" />
+
+</data>
+</odoo>

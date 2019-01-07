@@ -1,0 +1,49 @@
+<odoo>
+<data>
+    <record model="ir.actions.act_window" id="outstanding_request_list_action">
+        <field name="name">Outstanding Requests</field>
+        <field name="res_model">funding_request_management.request</field>
+        <field name="view_type">form</field>
+        <field name="view_id" ref="request_tree_view"/>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('closing_state','=','open')]</field>
+
+    </record>
+    <record model="ir.ui.view" id="to_aprove_request_tree_view">
+        <field name="name">request.tree</field>
+        <field name="model">funding_request_management.request</field>
+        <field name="arch" type="xml">
+            <tree string="Request" default_order='create_date desc' decoration-danger="closing_state=='open'"  >
+
+                <field name="date_submitted"/>
+
+                <field name="name" string="Ref"/>
+                <field name="partner_id" />
+                <field name="closing_state" invisible="True"/>
+                <field name="type_of_request" />
+                <field name="state" />
+                <field name="total_amount" />
+                <field name="create_uid" string="User" groups="funding_request_management.group_manager,funding_request_management.group_own_manager"/>
+                <field name="approve_by" />
+                <field name="days"  />
+            </tree>
+        </field>
+    </record>
+
+
+
+    <record model="ir.actions.act_window" id="to_approve_request_list_action">
+        <field name="name">To Approve Requests</field>
+        <field name="res_model">funding_request_management.request</field>
+        <field name="view_type">form</field>
+        <field name="view_id" ref="to_aprove_request_tree_view"/>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('state','=','submitted')]</field>
+
+    </record>
+
+
+
+</data>
+
+</odoo>

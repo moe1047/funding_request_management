@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+	<record id="delivery_wizard_report_view" model="ir.ui.view">
+        <field name="name">Bulk Authorazation</field>
+        <field name="model">funding_request_management.add_authorize_wizard</field>
+        <field name="arch" type="xml">
+        	<form>
+				<group>
+					<field name="name" readonly='True' string="Requests: - "/>
+				</group>
+
+
+        		<footer>
+	                <button name="print_report" string="Add Authorization" type="object" default_focus="1" class="oe_highlight" />
+	                -
+					<button name="cancel_authorization" string="Cancel Authorization" type="object" default_focus="1" class="oe_highlight" />
+					-
+	                <button string="Cancel" class="oe_link" special="cancel" />
+	            </footer>
+			</form>
+        </field>
+    </record>
+		<record id="expenditure_wizard_report_view" model="ir.ui.view">
+	        <field name="name">Bulk Expenditure</field>
+	        <field name="model">funding_request_management.expenditure_wizard</field>
+	        <field name="arch" type="xml">
+	        	<form>
+					<group>
+						<field name="name" readonly='True' string="Requests: - "/>
+						<field name="partner_id"/>
+					</group>
+	        		<footer>
+		                <button name="print_report" string="Add Expenditure" type="object" default_focus="1" class="oe_highlight" />
+		                -
+						<button name="cancel_expenditure" string="Cancel Expenditure" type="object" default_focus="1" class="oe_highlight" />
+		                -
+		                <button string="Cancel" class="oe_link" special="cancel" />
+		            </footer>
+				</form>
+	        </field>
+	    </record>
+
+    <act_window id="bulk_recieve_action"
+           name="Manage Authorazation"
+           src_model="funding_request_management.request"
+            res_model="funding_request_management.add_authorize_wizard"
+             key2="client_action_multi"
+              target="new"
+               view_mode="form" multi="True"/>
+		 <act_window id="bulk_expensiture_action"
+            name="Manage Expenditure"
+            src_model="funding_request_management.request"
+             res_model="funding_request_management.expenditure_wizard"
+              key2="client_action_multi"
+               target="new"
+                view_mode="form" multi="True"/>
+
+
+
+</odoo>

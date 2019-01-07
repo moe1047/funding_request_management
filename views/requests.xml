@@ -1,0 +1,205 @@
+<odoo>
+<data>
+    <record model="ir.ui.view" id="request_search_view">
+        <field name="name">request.search</field>
+        <field name="model">funding_request_management.request</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name" string="Ref"/>
+                <field name="date_submitted"/>
+                <field name="partner_id" />
+                <field name="programme_code" />
+                <field name="responsible" />
+                <field name="implementing_partner" />
+                <field name="type_of_request" />
+                <field name="approve_by" />
+                <field name="total_amount" />
+            </search>
+        </field>
+    </record>
+    <record model="ir.ui.view" id="request_tree_view">
+        <field name="name">request.tree</field>
+        <field name="model">funding_request_management.request</field>
+        <field name="arch" type="xml">
+            <tree string="Request" default_order='create_date desc' decoration-danger="closing_state=='open'"  >
+
+                <field name="date_submitted"/>
+                <field name="due_date"  />
+                <field name="name" string="Ref"/>
+                <field name="partner_id" />
+                <field name="closing_state" invisible="True"/>
+                <field name="type_of_request" />
+                <field name="state" />
+                <field name="total_amount" />
+                <field name="received" groups="funding_request_management.group_manager" sum="Total Authorized"/>
+                <field name="paid" sum="Total Expenditure" groups="funding_request_management.group_manager"/>
+                <field name="total_sub_payment" string="Sub Payments" sum="Total Sum Payments"/>
+                <field name="balance" sum="Total Balance" groups="funding_request_management.group_manager"/>
+                <field name="create_uid" string="User" groups="funding_request_management.group_manager"/>
+                <field name="days"  />
+            </tree>
+        </field>
+    </record>
+    <record model="ir.ui.view" id="request_view">
+        <field name="name">request.form</field>
+        <field name="model">funding_request_management.request</field>
+        <field name="arch" type="xml">
+            <form string="Request Form" >
+                <header>
+            <button string="Approve" type="object" name="approve" class="oe_highlight"
+                attrs="{'invisible': [('state','=','approved')]}" groups="funding_request_management.group_can_approve"/>
+            <button string="Disapprove" type="object" name="disapprove" class="oe_highlight"
+                attrs="{'invisible': [('state','=','submitted')]}" groups="funding_request_management.group_can_approve"/>
+            <button string="Receive" type="object" name="invoice_create" class="oe_highlight"
+                attrs="{'invisible': [('invoice_id','!=',False)]}"
+                groups="funding_request_management.group_manager"/>
+            <button string="Add Bill" type="object" name="bill_create" class="oe_highlight"
+                attrs="{'invisible': [('balance','=',0)]}" groups="funding_request_management.group_manager"/>
+
+                  <!--This will create the statusbar, thanks to the widget. -->
+                <field name="state" widget="statusbar" />
+
+                </header>
+              <sheet>
+
+                <div class="oe_button_box" name="button_box" attrs="{'invisible': [('invoice_id','=',False)]}" groups="funding_request_management.group_manager">
+                    <button name="action_view_bill"
+                        type="object"
+                        class="oe_stat_button"
+                        icon="fa-pencil-square-o"
+                        attrs="{'invisible': [('bills_count','=',0)]}"  string="Expenditure = ">
+                        <field name="bills_count" widget="statinfo" groups="funding_request_management.group_manager" />
+                    </button>
+                    <button name="action_view_invoice" type="object" class="oe_stat_button" icon="fa-book" >
+                        <field name="invoice_id" widget="statinfo" string="Authorized" groups="funding_request_management.group_manager"/>
+                    </button>
+
+                </div>
+
+
+                  <div class="oe_title">
+                      <h1>
+                          Reference
+                          <field name="name" />
+                      </h1>
+                  </div>
+                    <group>
+                        <group>
+
+                        <field name="received" invisible="True"/>
+                        <field name="paid" invisible="True"/>
+                        <field name="bills_count" invisible="True"/>
+                        <field name="balance" invisible="True"/>
+                        <field name="invoiced" invisible="True"/>
+                        <field name="closing_state" invisible="True"/>
+                        <field name="request_type" attrs="{'readonly': [('state', '=', 'approved')]}"/>
+
+                        <field name="partner_id" attrs="{'readonly': [('state', '=', 'approved')]}" options="{'no_quick_create': true, 'no_create_edit': true}"/>
+                        <field name="country" attrs="{'invisible': [('request_type', '!=', 'faceform')]}"/>
+                        <field name="programme_code" attrs="{'invisible': [('request_type', '!=', 'faceform')]}"/>
+                        <field name="projet_code"  attrs="{'invisible': [('request_type', '!=', 'faceform')]}"/>
+                        <field name="responsible" widget="many2many_tags"   attrs="{'invisible': [('request_type', '!=', 'faceform')]}" options="{'no_quick_create': true, 'no_create_edit': true}"/>
+                        <field name="approve_by"  attrs="{'readonly': [('state', '=', 'approved')]}"  options="{'no_quick_create': true, 'no_create_edit': true}"/>
+
+
+                        </group>
+                        <group>
+                            <field name="date_submitted"  />
+
+                            <field name="type_of_request" />
+                            <field name="company_id" groups="base.group_multi_company"/>
+                            <field name="note" />
+                            </group>
+                    </group>
+                    <group  attrs="{'invisible': [('request_type', '!=', 'faceform')]}">
+                        <field name="request" />
+                    </group>
+                    <group  attrs="{'invisible': [('request_type', '!=', 'faceform')]}">
+                            <field name="report" />
+                    </group>
+
+
+
+
+
+                    <notebook>
+                        <page string="Request Line">
+                            <field name="request_line_ids" widget="one2many_list" attrs="{'readonly': [('state', '=', 'approved')]}">
+                                <tree string="Detail" editable="bottom" >
+                                    <field name="description"/>
+                                    <field name="request_amount"  />
+                                    </tree>
+                            </field>
+                            <group class="oe_subtotal_footer oe_right" colspan="2" name="total_amount">
+                                <field name="total_amount" widget="monetary" />
+                            </group>
+
+
+                        </page>
+                        <page string="Reporting" attrs="{'invisible': [('request_type', '!=', 'faceform')]}">
+                            <field name="report_line_ids" widget="one2many_list" >
+                                <tree string="Detail" editable="bottom" >
+                                    <field name="description"/>
+                                    <field name="authorized"  />
+                                    <field name="expenditure"/>
+                                    </tree>
+                            </field>
+                            <group class="oe_subtotal_footer oe_right" colspan="2" name="totals">
+                                <field name="total_authorized_amount" widget="monetary" string="Total Authorized"/>
+                                <field name="total_expenditure_amount" widget="monetary"  string="Total Expenditure"/>
+                            </group>
+                        </page>
+                        <page string="Sub Payments">
+                            <field name="sub_payment_line_ids" widget="one2many_list" >
+                                <tree string="Detail" editable="bottom" >
+                                    <field name="date"  />
+                                    <field name="name"/>
+                                    <field name="payee"  />
+                                    <field name="description"  />
+                                    <field name="amount"  />
+                                    <field name="payment_type"  />
+                                    </tree>
+                            </field>
+                            <group class="oe_subtotal_footer oe_right" colspan="2" name="total_sub_payments">
+                                <field name="total_sub_payment" widget="monetary" />
+                            </group>
+                        </page>
+
+                    </notebook>
+              </sheet>
+                <div class="oe_chatter">
+                  <field name="message_follower_ids" widget="mail_followers"/>
+                  <field name="message_ids" widget="mail_thread"/>
+              </div>
+            </form>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="request_list_action">
+        <field name="name">Requests</field>
+        <field name="res_model">funding_request_management.request</field>
+        <field name="view_type">form</field>
+        <field name="view_id" ref="request_tree_view"/>
+        <field name="view_mode">tree,form</field>
+
+    </record>
+    <record id="view_location_security_users_form" model="ir.ui.view">
+        <field name="name">manager.users.form</field>
+        <field name="model">res.users</field>
+        <field name="inherit_id" ref="base.view_users_form"/>
+        <field name="arch" type="xml">
+
+            <notebook>
+                <page string="title" >
+                    <label for="title" string="Title" class="oe_edit_only"/>
+                    <h2>
+                        <field name="title" />
+                    </h2>
+                </page>
+            </notebook>
+        </field>
+    </record>
+
+
+</data>
+</odoo>

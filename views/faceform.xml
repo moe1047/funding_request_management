@@ -1,0 +1,369 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="faceform_paperformat" model="report.paperformat">
+        <field name="name">(Landscape-A4)</field>
+        <field name="default" eval="False" />
+        <field name="format">A4</field>
+        <field name="orientation">Landscape</field>
+        <field name="margin_top">0.50</field>
+        <field name="margin_bottom">0.2</field>
+        <field name="margin_left">0.50</field>
+        <field name="margin_right">0.50</field>
+        <field name="header_line" eval="False" />
+        <field name="header_spacing">35</field>
+        <field name="dpi">90</field>
+
+    </record>
+
+
+
+
+
+
+       <report
+           id="action_print_faceform_reportt"
+           name="funding_request_management.print_faceform_reportt"
+           file="funding_request_management.print_faceform_reportt"
+           model="funding_request_management.request"
+           string="Face-Form"
+           report_type="qweb-html"
+           paperformat="funding_request_management.faceform_paperformat"
+
+           />
+
+	<template id="print_faceform_reportt">
+	           <t t-call="web.html_container">
+	               <t t-foreach="docs" t-as="doc">
+                       <t t-call="web.internal_layout">
+						   <t t-if="doc.request_type == 'faceform'">
+							   <div class="page" style="font-family:'Arial Narrow', Arial, sans-serif">
+                                   <style>
+                                       table.table-bordered{
+                                           border:2px solid black;
+                                           margin-top:20px;
+                                         }
+                                       table.table-bordered > thead > tr > th{
+                                           border:2px solid black;
+                                           padding-top:0;
+                                           padding-bottom:0;
+                                       }
+                                       table.table-bordered > tbody > tr > td{
+                                           border:1px solid black;
+                                           padding-top:0;
+                                           padding-bottom:0;
+                                       }
+
+
+                                   </style>
+                                   <p class="text-center" style="font-family: Arial, sans-serif;font-size: 20pt;">
+                                       <strong>FACE - Form</strong>
+                                   </p>
+
+		                           <div class="row" style="border-style: solid;border-width: 2px;padding:12px">
+		                               <div class="row" style="font-size: 10pt;">
+                                			<div class="col-xs-6">
+                                                <p><strong>Funding Authorization &amp; Certificate of Expenditures</strong></p>
+                                                <table class="table table-bordered"  style="border:0px solid white;margin-top:0px;margin-bottom:0px" >
+                                                    <tbody>
+                                                        <tr style="padding-top:0;padding-bottom:0;">
+                                                            <td style="border:0px solid white;">Country:</td> <td style="border:0px solid white;"><t t-esc="doc.country"/></td>
+                                                            </tr>
+                                                        <tr style="padding-top:0;padding-bottom:0;">
+                                                            <td style="border:0px solid white;">Programme Code &amp; Title:</td> <td style="border:0px solid white;"><u><t t-esc="doc.programme_code"/></u></td>
+                                                            </tr>
+                                                        <tr style="padding-top:0;padding-bottom:0;">
+                                                            <td style="border:0px solid white;">Project code &amp; Title:</td> <td style="border:0px solid white;"><u><t t-esc="doc.projet_code"/></u></td>
+                                                            </tr>
+                                                        <tr style="padding-top:0;padding-bottom:0;">
+                                                            <td style="border:0px solid white;">Resposible Officer(s):</td>
+                                                            <td style="border:0px solid white;">
+                                                            <t t-foreach="doc.responsible" t-as="l">
+                                                                (<span t-field="l.name"/>)
+                                                            </t>
+                                                            </td>
+                                                            </tr>
+                                                        <tr style="padding-top:0;padding-bottom:0;">
+                                                            <td style="border:0px solid white;">Implementing Partner:</td> <td style="border:0px solid white;"><u>Ministry of Health</u></td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+
+                                			</div>
+                                            <div class="col-xs-2 text-center">
+                                                <address>
+                                                    <p><strong>UN Agency:<u> <t t-esc="doc.partner_id.name"/></u></strong></p>
+                                                </address>
+                                			</div>
+
+                                			<div class="col-xs-4 text-right">
+                                                <address>
+                                                    <p><strong>Date: <u><t t-esc="doc.date_submitted"  t-options="{'format': 'dd-MM-yyyy','widget': 'date'}"/></u></strong></p>
+                                                    <p>Type of request: <br></br><strong><t t-esc="{False: False, 'direct_cash_transfer': 'Direct Cash Transer (DCT)', 'reimbursement': 'Reimbursement', 'direct_payment': 'Direct Payment'}[doc.type_of_request]"/></strong></p>
+                                                </address>
+                                			</div>
+                                            <style>
+                                                table.table-bordered{
+                                                    border:2px solid black;
+                                                    margin-top:20px;
+                                                  }
+                                                table.table-bordered > thead > tr > th{
+                                                    border:2px solid black;
+                                                    padding-top:0;
+                                                    padding-bottom:0;
+                                                }
+                                                table.table-bordered > tbody > tr > td{
+                                                    border:1px solid black;
+                                                    padding-top:0;
+                                                    padding-bottom:0;
+                                                }
+                                                table > thead > tr > th{
+                                                    border:2px solid black;
+                                                    padding-top:0;
+                                                    padding-bottom:0;
+                                                }
+                                                table > tbody > tr > td{
+                                                    border:1px solid black;
+                                                    padding-top:0;
+                                                    padding-bottom:0;
+                                                }
+
+                                            </style>
+                                            <div class="col-xs-12">
+                                                <table class="table table-bordered" style="margin-top:0px;margin-bottom:8px">
+                                                    <thead style="font-size: 8pt;">
+                                                        <tr>
+                                                            <th style="border: 0px solid black;" colspan="2" class="text-center"><u>Currency: USD Dollar</u></th>
+
+                                                            <th style="border: 0px solid black;border: 0px solid black;"></th>
+                                                            <th width="3" style="padding:0;border: 0px solid black;"></th>
+                                                            <th style="border: 1px solid black;" colspan='4' class="text-center">REPORTING</th>
+                                                            <th width="3" style="padding:0;border: 0px solid black;"></th>
+                                                            <th  style="border: 1px solid black;" colspan='3' class="text-center">REQUESTS / AUTHORIZATIONS</th>
+                                                        </tr>
+                                                        <tr>
+                                                            <th class="text-center">Activity Description from AWP with Duration</th>
+                                                            <th width="3" style="padding:0"></th>
+                                                            <th class="text-center">Coding for UNDP, UNFPA &amp; WFP</th>
+                                                            <th width="3" style="padding:0"></th>
+                                                            <th class="text-center">Authorised Amount<br></br><strong>A</strong></th>
+                                                            <th class="text-center">Actual Project Expenditure<br></br><strong>B</strong></th>
+                                                            <th class="text-center">Expenditures accepted by Agency<br></br><strong>C</strong></th>
+                                                            <th class="text-center">Balance<br></br><strong>D = A - C</strong></th>
+                                                            <th width="3" style="padding:0"></th>
+                                                            <th class="text-center">New Request Period &amp; Amount<br></br><strong>E</strong></th>
+                                                            <th class="text-center">Authorised Amount<br></br><strong>F</strong></th>
+                                                            <th class="text-center">Outstanding Authorised Amount<br></br><strong>G = D + F</strong></th>
+
+                                                        </tr>
+
+                                                    </thead>
+                                                    <tbody style="font-size: 8pt;">
+                                                      <t t-foreach="doc.report_line_ids" t-as="report_line">
+
+                                                          <tr>
+                                                              <td><t t-esc="report_line.description"/></td>
+                                                              <td width="3" style="padding:0"></td>
+                                                              <td></td>
+                                                              <td width="3" style="padding:0"></td>
+                                                              <td class="text-right"><t t-esc="report_line.authorized" t-esc-options='{"widget": "monetary","display_currency": doc.create_uid.company_id.currency_id}'/></td>
+                                                              <td class="text-right"><t t-esc="report_line.expenditure" t-esc-options='{"widget": "monetary","display_currency": doc.create_uid.company_id.currency_id}'/></td>
+                                                              <td></td>
+                                                              <td></td>
+                                                              <td width="3" style="padding:0"></td>
+                                                              <td></td>
+                                                              <td></td>
+                                                              <td></td>
+                                                          </tr>
+                                                      </t>
+                                                      <t t-foreach="doc.request_line_ids" t-as="request_line">
+                                                            <tr>
+                                                                <td><t t-esc="request_line.description"/></td>
+                                                                <td width="3" style="padding:0"></td>
+                                                                <td></td>
+                                                                <td width="3" style="padding:0"></td>
+                                                                <td></td>
+                                                                <td></td>
+                                                                <td></td>
+                                                                <td></td>
+                                                                <td width="3" style="padding:0"></td>
+                                                                <td class="text-right"> <t t-esc="request_line.request_amount" t-esc-options='{"widget": "monetary","display_currency": doc.create_uid.company_id.currency_id}'/></td>
+                                                                <td></td>
+                                                                <td></td>
+                                                            </tr>
+                                                        </t>
+                                                        <tr>
+                                                            <td><strong>Total</strong></td>
+                                                            <td width="3" style="padding:0"></td>
+                                                            <td></td>
+                                                            <td width="3" style="padding:0"></td>
+                                                            <td class="text-right"><t t-esc="doc.total_authorized_amount" t-esc-options='{"widget": "monetary","display_currency": doc.create_uid.company_id.currency_id}'/></td>
+                                                            <td class="text-right"><t t-esc="doc.total_expenditure_amount" t-esc-options='{"widget": "monetary","display_currency": doc.create_uid.company_id.currency_id}'/></td>
+                                                            <td></td>
+                                                            <td></td>
+                                                            <td width="3" style="padding:0"></td>
+                                                            <td class="text-right"><t t-esc="doc.total_amount" t-esc-options='{"widget": "monetary","display_currency": doc.create_uid.company_id.currency_id}'/> </td>
+                                                            <td></td>
+                                                            <td></td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                			</div>
+                                            <div class="col-xs-12">
+                                                <p><strong>The undersigned authorized officer of the above-mentioned implementing institution hereby certifies that:</strong></p>
+                                                <p><t t-if="doc.request"><input type="checkbox" checked="checked"></input></t><t t-else=""><input type="checkbox"></input></t> The funding request shown above represents estimated expenditures as per AWP and itemized cost estimates attached.</p>
+                                                <p><t t-if="doc.report"><input type="checkbox" checked="checked"></input></t><t t-else=""><input type="checkbox"></input></t> The actual expenditures for the period stated herein has been disbursed in accordance with the AWP and request with itemized cost estimates. The detailed accounting documents for these expenditures can be made available for examination, when required, for the period of five years from the date of the provision of funds.</p>
+                                			</div><br></br>
+
+                                            <div class="col-xs-6" style="margin-top:20px;padding-right:0px">
+                                                <address>
+                                                    <p style="font-size: 10pt;"><strong>Date Submitted: <u><t t-esc="doc.date_submitted"  t-options="{'format': 'dd-MM-yyyy','widget': 'date'}"/></u></strong></p>
+                                                    <p style="font-size: 8pt;"><strong>Notes: </strong> Shaded areas to be completed by the UN Agency &amp; non-shaded areas to be completed by the counterpart.</p>
+
+                                                </address>
+                                			</div>
+                                            <div class="col-xs-6 text-right">
+                                                <div class="col-xs-9 text-right" style="margin-top:20px;padding-right:0px">
+                                                    <address>
+                                                        <p><strong>Name:</strong> <u style="padding-right: 20px;"><t t-esc="doc.approve_by.name"/></u> <strong>Title:</strong> <u> <t t-esc="doc.approve_by.title"/></u>
+                                                    </p>
+                                                    </address>
+                                                </div>
+                                                <div class="col-xs-3 text-left" style="padding-left:0px;padding-right:0px">
+                                                    <t t-if="doc.state == 'approved'">
+    													<t t-if="doc.approve_by.signature_image">
+    														<span t-field="doc.approve_by.signature_image" t-field-options='{"widget": "image"}' class="oe_right oe_image_custom" style="width: 90px; height: 90px;"/><br></br>
+    													</t>
+    													<t t-else="">
+    														<span t-field="doc.approve_by.digital_signature" t-field-options='{"widget": "image"}'/>
+    													</t>
+
+    												</t>
+                                                </div>
+
+                                			</div>
+                                      <div class="col-xs-12">
+                                        <p style="font-size: 8pt;"><strong><u>FOR AGENCY USE ONLY:</u> </strong> </p>
+
+
+                                      </div>
+
+                                            <div class="col-xs-3">
+
+
+                                                <table class="table table-bordered" style="font-size: 8pt;margin-top: 0px;;margin-bottom:0px">
+                                                    <tr class="text-center">
+                                                        <td >FOR ALL AGENCIES</td>
+
+                                                    </tr>
+                                                    <tr >
+                                                        <td>Approved by:</td>
+
+
+                                                    </tr>
+                                                    <tr>
+                                                        <td style="padding-top:30px">
+                                                            Name:_______________________________ <br></br><br></br>
+                                                            Title:______________________________ <br></br><br></br>
+                                                            Date:_______________________________<br></br><br></br>
+
+                                                        </td>
+
+
+                                                    </tr>
+                                                </table>
+
+                                			</div>
+
+                                            <div class="col-xs-6">
+                                                <table class="table table-bordered" style="font-size: 8pt;margin-top: 0px;margin-bottom:0px">
+                                                    <tr class="text-center">
+                                                        <td colspan='2' style="padding:0px">FOR UNICEF USE ONLY</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Account Charges</td>
+                                                        <td>Liquidation Information</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>
+                                                            Cash Transfer Reference:<br></br>
+                                                            <span> CRQ ref. no.,  Voucher ref. no.</span>
+
+                                                        </td>
+
+                                                        <td>
+                                                            DCT Reference:<br></br>
+                                                            <span>  CRQ ref. no., Liquidation ref. no.</span>
+
+                                                        </td>
+
+
+                                                    </tr>
+                                                    <tr>
+                                                        <td>
+                                                            GL codes:<br></br>
+                                                              Training<br></br>
+                                                              Travel:<br></br>
+                                                              Meetings &amp; Conferences<br></br>
+                                                              Other Cash Transfers:<br></br>
+
+                                                        </td>
+
+                                                        <td>
+                                                            DCT Amount<br></br>
+                                                            Less:<br></br>
+                                                               Liquidation<br></br>
+                                                               Amount<br></br>
+                                                        </td>
+
+
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Total
+
+                                                        </td>
+
+                                                        <td>Balance
+
+                                                        </td>
+
+
+                                                    </tr>
+                                                </table>
+
+                                			</div>
+
+                                            <div class="col-xs-3 ">
+                                                <table class="table table-bordered" style="font-size: 8pt;margin-top: 0px;margin-bottom:0px">
+                                                    <tr class="text-center">
+                                                        <td colspan='1'>FOR UNFPA USE ONLY</td>
+
+
+                                                    </tr>
+                                                    <tr>
+                                                        <td>New Funding Release  </td>
+
+
+
+
+                                                    </tr>
+                                                    <tr style="padding-bottom:85px">
+                                                        <td>
+                                                            <br></br>Activity 1<br></br><br></br>
+                                                            Activity 2<br></br>
+                                                            <hr></hr>
+                                                            Total
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                			</div>
+
+
+                                		</div>
+		                           </div>
+		                       </div>
+							</t>
+                        </t>
+	               </t>
+	           </t>
+	       </template>
+</odoo>

@@ -1,0 +1,134 @@
+<odoo>
+<data>
+  <template id="boxed_layout" inherit_id="web.external_layout_boxed">
+      <xpath expr="//div[@class='header o_boxed_header']" position="replace">
+          <div class="header o_boxed_header">
+              <div class="col-xs-4 text-center pull-left">
+                      <h4 style="color:black">Dawlad G.Puntland EE SOOMAALIYEED <br></br>Wasaaradda <br></br>Caafimaadka</h4>
+
+              </div>
+              <div class="col-xs-4 text-center">
+                  <img t-if="company.logo" style = "max-height:105px" src="/funding_request_management/static/src/img/Puntland-state-logo.png"/>
+
+              </div>
+              <div class="col-xs-4 text-center pull-right">
+                  <h4 style="color:black">حكومة بنت لاند الصومالية
+<br></br> وزارة الصحة</h4>
+
+              </div>
+              <div class="clearfix mb8"/>
+          </div>
+
+
+
+      </xpath>
+      <xpath expr="//div[@class='footer o_boxed_footer']" position="replace">
+        <div class="footer o_boxed_footer">
+              <div class="text-center">
+                  <div>
+                      Page: <span class="page"/> / <span class="topage"/>
+                  </div>
+              </div>
+          </div>
+
+
+      </xpath>
+
+
+
+
+
+  </template>
+
+
+    <template id="background_layout" inherit_id="web.external_layout_background">
+        <xpath expr="//div[@class='header o_background_header']" position="replace">
+            <div class="header o_background_header">
+                <div class="col-xs-4 text-center pull-left">
+                        <h4 style="color:black"> Dawlad G.Puntland EE SOOMAALIYEED <br></br>Wasaaradda <br></br>Caafimaadka</h4>
+
+                </div>
+                <div class="col-xs-4 text-center">
+                    <img t-if="company.logo" style = "max-height:105px" src="/funding_request_management/static/src/img/Puntland-state-logo.png"/>
+
+                </div>
+                <div class="col-xs-4 text-center pull-right">
+                    <h4 style="color:black">حكومة بنت لاند الصومالية
+<br></br> وزارة الصحة</h4>
+
+                </div>
+                <div class="clearfix mb8"/>
+            </div>
+
+
+
+        </xpath>
+        <xpath expr="//div[@class='footer o_background_footer']" position="replace">
+
+
+        </xpath>
+        <xpath expr="//div[@class='article o_report_layout_background']" position="replace">
+            <div class="article o_report_layout_background" >
+                <t t-raw="0"/>
+            </div>
+
+
+        </xpath>
+
+
+    </template>
+    <template id="web.payment_voucher_external_layout_background">
+            <div class="header o_background_header">
+                <div class="col-xs-4 text-center pull-left">
+                        <h4 style="color:black">Dawlad G.Puntland EE SOOMAALIYEED <br></br>Wasaaradda <br></br>Caafimaadka</h4>
+
+                </div>
+                <div class="col-xs-4 text-center">
+                    <img t-if="company.logo" style = "max-height:105px" src="/funding_request_management/static/src/img/Puntland-state-logo.png"/>
+
+                </div>
+                <div class="col-xs-4 text-center pull-right">
+                    <h4 style="color:black">حكومة بنت لاند الصومالية
+<br></br> وزارة الصحة</h4>
+
+
+                </div>
+                <div class="clearfix mb8"/>
+            </div>
+
+            <div class="article o_report_layout_background" style="min-height:350px;">
+                <t t-raw="0"/>
+            </div>
+
+    </template>
+    <template id="web.payment_voucher_external_layout">
+    <!-- Multicompany -->
+        <t t-if="not o and doc">
+            <t t-set="o" t-value="doc"/>
+        </t>
+
+        <t t-if="o and 'company_id' in o">
+            <t t-set="company" t-value="o.company_id.sudo()"/>
+        </t>
+        <t t-if="not o or not 'company_id' in o">
+            <t t-set="company" t-value="res_company"/>
+        </t>
+
+        <t t-if="company.external_report_layout == 'background'">
+            <t t-call="web.payment_voucher_external_layout_background"><t t-raw="0"/></t>
+        </t>
+        <t t-if="company.external_report_layout == 'boxed'">
+            <t t-call="web.external_layout_boxed"><t t-raw="0"/></t>
+        </t>
+        <t t-if="company.external_report_layout == 'clean'">
+            <t t-call="web.external_layout_clean"><t t-raw="0"/></t>
+        </t>
+        <t t-if="company.external_report_layout in (False, 'standard')">
+            <t t-call="web.external_layout_standard"><t t-raw="0"/></t>
+        </t>
+    </template>
+
+
+</data>
+
+</odoo>

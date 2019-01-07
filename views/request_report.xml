@@ -1,0 +1,75 @@
+<odoo>
+<data>
+    <report
+        id="action_request_report"
+        name="funding_request_management.request_report"
+        file="funding_request_management.request_report"
+        model="funding_request_management.request"
+        string="Request Report"
+        report_type="qweb-html"
+        />
+
+    <template id="request_report">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <div class="row">
+                            <h3 class="text-center">Request Summery Report</h3>
+                        	<div class="col-md-12">
+                        		<div class="">
+                        			<table class="table table-bordered"  style="font-size: 11px">
+                						<thead>
+                                            <tr>
+                                                <td><strong>Date</strong></td>
+                                                <td><strong>Payment Voucher</strong></td>
+                                                <td ><strong>Payee</strong></td>
+                                                <td><strong>Description</strong></td>
+                    							<td><strong>Amount USD($)</strong></td>
+                                            </tr>
+                						</thead>
+                                        <tbody>
+                                            <t t-set="total_amount" t-value="0"/>
+                                            <t t-foreach="doc.sub_payment_line_ids" t-as="payment">
+                                                <tr>
+                                                    <t t-set="total_amount" t-value="total_amount+payment.amount"/>
+                                                    <td><span t-field="payment.date" style="padding:5px;padding-bottom:1px;"/></td>
+                                                    <td><span t-field="payment.name" style="padding:5px;padding-bottom:1px;"/></td>
+                                                    <td><span t-field="payment.payee" style="padding:5px;padding-bottom:1px;"/></td>
+                                                    <td><span t-field="payment.description" style="padding:5px;padding-bottom:1px;"/></td>
+                                                    <td style="padding:5px;padding-bottom:1px;"><span t-field="payment.amount" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/> </td>
+                                                </tr>
+                                            </t>
+                                            <tr>
+
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td><strong>Total:</strong></td>
+                                                <td><t t-esc="total_amount" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/></td>
+                                            </tr>
+                						</tbody>
+                        			</table>
+                        		</div>
+                            </div>
+                            <div class="col-xs-4" style="font-size: 13px">
+                                <p><strong>Approved By:</strong>____________________</p><br></br>
+                                <p><strong>Title:</strong>__________________________</p>
+                                <p><strong>Name:</strong>________________________</p>
+                            </div>
+                            <div class="col-xs-4 col-xs-offset-4" style="font-size: 13px">
+                                <p><strong>Printed By:</strong>____________________________</p><br></br>
+                                <p><strong>Title:</strong>____________________________</p>
+                                <p><strong>Name:</strong><t t-esc="user.name"/></p>
+
+                            </div>
+                        </div>
+                    </div>
+                </t>
+            </t>
+
+        </t>
+    </template>
+
+</data>
+</odoo>
