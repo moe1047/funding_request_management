@@ -156,7 +156,6 @@ class Request(models.Model):
     projet_code = fields.Char()
     responsible = fields.Many2many('res.users', string="Responsible Officer(s)")
     approve_by = fields.Many2one('res.users', string="Approve By",domain=lambda self: [("groups_id", "=", self.env.ref( "funding_request_management.group_can_approve").id)],required=True)
-    implementing_partner = fields.Many2one('res.partner', string="Partner")
     type_of_request  = fields.Selection([
         ('direct_cash_transfer', 'Direct Cash Transer (DCT)'),
         ('reimbursement', 'Reimbursement'),
