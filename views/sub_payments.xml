@@ -29,8 +29,8 @@
 			</form>
         </field>
     </record>
-    <record model="ir.ui.view" id="request_search_view">
-        <field name="name">request.search</field>
+    <record model="ir.ui.view" id="subpayment_search_view">
+        <field name="name">subpayment.search</field>
         <field name="model">funding_request_management.sub_payments</field>
         <field name="arch" type="xml">
             <search>
