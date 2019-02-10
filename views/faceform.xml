@@ -78,7 +78,7 @@
                                                             <td style="border:0px solid white;">Resposible Officer(s):</td>
                                                             <td style="border:0px solid white;">
                                                             <t t-foreach="doc.responsible" t-as="l">
-                                                                (<span t-field="l.name"/>)
+                                                                <span t-field="l.name"/>
                                                             </t>
                                                             </td>
                                                             </tr>
@@ -98,7 +98,10 @@
                                 			<div class="col-xs-4 text-right">
                                                 <address>
                                                     <p><strong>Date: <u><t t-esc="doc.date_submitted"  t-options="{'format': 'dd-MM-yyyy','widget': 'date'}"/></u></strong></p>
-                                                    <p>Type of request: <br></br><strong><t t-esc="{False: False, 'direct_cash_transfer': 'Direct Cash Transer (DCT)', 'reimbursement': 'Reimbursement', 'direct_payment': 'Direct Payment'}[doc.type_of_request]"/></strong></p>
+                                                    <p class="text-right"><strong>Type of request: </strong></p>
+                                                    <p class="text-right"><t t-if="doc.type_of_request == 'direct_cash_transfer'"><input type="checkbox" checked="checked"/></t><t t-else=""><input type="checkbox"></input></t> Direct Cash Transer (DCT)</p>
+                                                    <p class="text-right"><t t-if="doc.type_of_request == 'reimbursement'"><input type="checkbox" checked="checked"/></t><t t-else=""><input type="checkbox"></input></t> Reimbursement</p>
+                                                    <p class="text-right"><t t-if="doc.type_of_request == 'direct_payment'"><input type="checkbox" checked="checked"/></t><t t-else=""><input type="checkbox"></input></t> Direct Payment</p>
                                                 </address>
                                 			</div>
                                             <style>
@@ -145,12 +148,12 @@
                                                             <th width="3" style="padding:0"></th>
                                                             <th class="text-center">Coding for UNDP, UNFPA &amp; WFP</th>
                                                             <th width="3" style="padding:0"></th>
-                                                            <th class="text-center">Authorised Amount<br></br><strong>A</strong></th>
-                                                            <th class="text-center">Actual Project Expenditure<br></br><strong>B</strong></th>
+                                                            <th class="text-center">Authorised Amount<br></br><strong>A</strong><br></br><t t-esc="doc.authorized_amount_period"/></th>
+                                                            <th class="text-center">Actual Project Expenditure<br></br><strong>B</strong><br></br><t t-esc="doc.expediture_amount_period"/></th>
                                                             <th class="text-center">Expenditures accepted by Agency<br></br><strong>C</strong></th>
                                                             <th class="text-center">Balance<br></br><strong>D = A - C</strong></th>
                                                             <th width="3" style="padding:0"></th>
-                                                            <th class="text-center">New Request Period &amp; Amount<br></br><strong>E</strong></th>
+                                                            <th class="text-center">New Request Period &amp; Amount<br></br><strong>E</strong><br></br><t t-esc="doc.request_amount_period"/></th>
                                                             <th class="text-center">Authorised Amount<br></br><strong>F</strong></th>
                                                             <th class="text-center">Outstanding Authorised Amount<br></br><strong>G = D + F</strong></th>
 

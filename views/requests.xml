@@ -53,7 +53,7 @@
             <button string="Receive" type="object" name="invoice_create" class="oe_highlight"
                 attrs="{'invisible': [('invoice_id','!=',False)]}"
                 groups="funding_request_management.group_manager"/>
-            <button string="Add Bill" type="object" name="bill_create" class="oe_highlight"
+            <button string="Pay" type="object" name="bill_create" class="oe_highlight"
                 attrs="{'invisible': [('balance','=',0)]}" groups="funding_request_management.group_manager"/>
 
                   <!--This will create the statusbar, thanks to the widget. -->
@@ -124,10 +124,16 @@
 
                     <notebook>
                         <page string="Request Line">
+                            <group>
+                                <field name="request_amount_period" attrs="{'invisible': [('request_type', '!=', 'faceform')]}"/>
+                            </group>
                             <field name="request_line_ids" widget="one2many_list" attrs="{'readonly': [('state', '=', 'approved')]}">
                                 <tree string="Detail" editable="bottom" >
+                                    <field name="hide"  invisible="True"/>
                                     <field name="description"/>
-                                    <field name="request_amount"  />
+                                    <field name="tonnage"  attrs="{'invisible':[('hide', '=', True)]}"/>
+                                    <field name="rate"  widget="monetary"  attrs="{'invisible':[('hide', '=', True)]}"/>
+                                    <field name="request_amount"  widget="monetary" />
                                     </tree>
                             </field>
                             <group class="oe_subtotal_footer oe_right" colspan="2" name="total_amount">
@@ -137,12 +143,16 @@
 
                         </page>
                         <page string="Reporting" attrs="{'invisible': [('request_type', '!=', 'faceform')]}">
+                            <group>
+                                <field name="authorized_amount_period"/>
+                                <field name="expediture_amount_period"/>
+                            </group>
                             <field name="report_line_ids" widget="one2many_list" >
                                 <tree string="Detail" editable="bottom" >
                                     <field name="description"/>
                                     <field name="authorized"  />
                                     <field name="expenditure"/>
-                                    </tree>
+                                </tree>
                             </field>
                             <group class="oe_subtotal_footer oe_right" colspan="2" name="totals">
                                 <field name="total_authorized_amount" widget="monetary" string="Total Authorized"/>
@@ -180,6 +190,7 @@
         <field name="res_model">funding_request_management.request</field>
         <field name="view_type">form</field>
         <field name="view_id" ref="request_tree_view"/>
+        <field name="search_view_id" ref="request_search_view"/>
         <field name="view_mode">tree,form</field>
 
     </record>

@@ -7,6 +7,7 @@ from openerp.exceptions import ValidationError
 from datetime import timedelta
 from dateutil.relativedelta import relativedelta
 import dateutil.parser,timeago
+from odoo.addons import decimal_precision as dp
 # class funding_request_management(models.Model):
 #     _name = 'funding_request_management.funding_request_management'
 
@@ -148,10 +149,7 @@ class Request(models.Model):
             #return dateutil.parser.parse(r.date_submitted).date() + timedelta(days=93)
             #return dateutil.parser.parse(r.date_submitted).date() + relativedelta(months=+3)
     id_ref_num = fields.Char(compute=_get_id_ref_num)
-
-
     name = fields.Char(required=True,string="Refer")
-
     partner_id = fields.Many2one('res.partner', string="Partner",required=True)
     country = fields.Char(string="Country",default='NEZ-Office-SC(3920/006/101)')
     programme_code = fields.Char()
@@ -168,6 +166,7 @@ class Request(models.Model):
     request_type  = fields.Selection([
         ('faceform', 'FaceForm'),
         ('normal_request', 'Normal Request'),
+        ('wfp_request', 'WFP Request'),
         ],default='faceform', string="Type",required=True)
     date_submitted = fields.Date(default=datetime.today())
     due_date = fields.Date(compute=_get_due_date, store=True)
@@ -196,6 +195,8 @@ class Request(models.Model):
         'funding_request_management.sub_payments', 'request_id', string="Sub Payments")
     total_amount = fields.Float(
         string="Total", compute='_get_total_amount', store=True)
+    total_tonnage = fields.Float(
+        string="Total", compute='_get_total_tonnage', store=True)
     total_sub_payment = fields.Float(string="Sub payments Total", compute='_get_sub_payment_amount', store=True)
     invoice_id = fields.Many2one(
         'account.invoice',track_visibility='always')
@@ -222,6 +223,9 @@ class Request(models.Model):
 
     days=fields.Char(compute='count_days')
     balance = fields.Float(string="Balance",compute='_compute_balance',default='0.0', store=True)
+    authorized_amount_period=fields.Char(string="Authorized Amount period")
+    expediture_amount_period=fields.Char(string="Expenditure Amount period")
+    request_amount_period=fields.Char(string="Request Amount period")
 
 
 
@@ -267,6 +271,15 @@ class Request(models.Model):
             else:
                 for request_line in r.request_line_ids:
                     r.total_amount = r.total_amount + request_line.request_amount
+
+    @api.depends('request_line_ids')
+    def _get_total_tonnage(self):
+        for r in self:
+            if not r.request_line_ids:
+                r.total_tonnage = 0
+            else:
+                for request_line in r.request_line_ids:
+                    r.total_tonnage = r.total_tonnage + request_line.tonnage
     @api.depends('sub_payment_line_ids')
     def _get_sub_payment_amount(self):
         for r in self:
@@ -464,7 +477,21 @@ class RequestLine(models.Model):
     request_id = fields.Many2one('funding_request_management.request',
         ondelete='cascade', required=True)
     code = fields.Char(string="Coding")
-    request_amount = fields.Float(string="Request amount",required=True)
+    tonnage = fields.Float(string="Tonnage Distributed", digits=dp.get_precision('Product Price'))
+    rate = fields.Float(string="Rate Per Tone", digits=dp.get_precision('Product Price'))
+    request_amount = fields.Float(string="Request amount",required=True, digits=dp.get_precision('Product Price'))
+
+    hide = fields.Boolean(string='Hide', compute="_compute_hide",default=True)
+
+    @api.depends('request_id.request_type')
+    def _compute_hide(self):
+        # simple logic, but you can do much more here
+        for r in self:
+            if r.request_id.request_type != 'wfp_request':
+                r.hide = True
+            else:
+                r.hide = False
+
 class AuhorizeWizard(models.TransientModel):
     _name = "funding_request_management.add_authorize_wizard"
     _description = "Bulk Payment Recieving"
@@ -595,17 +622,32 @@ class PrintRequestWizard(models.TransientModel):
     def _get_sub(self):
         request=self.env['funding_request_management.request'].search([('id','=',self.env.context.get('active_id'))],limit=1)
         request_line =self.env['funding_request_management.request.line'].search([('request_id','=',request.id)],limit=1)
+        if request.request_type == 'wfp_request':
+            return "Invoice for "
+        else:
+            return "Request for "+str(request_line.description)
 
-        return "Request for "+str(request_line.description)
 
     @api.model
     def _get_body(self):
         request=self.env['funding_request_management.request'].search([('id','=',self.env.context.get('active_id'))],limit=1)
         request_line =self.env['funding_request_management.request.line'].search([('request_id','=',request.id)],limit=1)
-        body="""
-We are here by requesting from {}, {} which is an Amount of ${:,} ({}).<br></br>
-Please transfer this amount through our bank Account Dahabshiil Garowe GRWD000429.
-        """.format(request.partner_id.name, request_line.description,request.total_amount,num2words(request.total_amount))
+        if request.request_type == 'wfp_request':
+            body="""
+    Dear Sirs/Madams <br></br>
+    We are here by requesting from {}, to release ......
+    <br></br><br></br>
+    The Funds will be transfered through Amal Bank (Garowe Branch) Account #1011687837.
+            """.format(request.partner_id.name)
+
+        else:
+            body="""
+    We are here by requesting from {}, {} which is an Amount of ${:,} ({}).<br></br>
+    Please transfer this amount through our bank Account Dahabshiil Garowe GRWD000429.
+            """.format(request.partner_id.name, request_line.description,request.total_amount,num2words(request.total_amount))
+
+
+
         return body
     to =fields.Char(default=_get_to)
     sub = fields.Char(default=_get_sub)
